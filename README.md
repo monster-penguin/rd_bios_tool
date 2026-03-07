@@ -124,11 +124,12 @@ You do not need anything other than the script and config file. `rd_bios_set.zip
 
 The basic workflow:
 
-1. Run the script.
-2. The script reads your RetroDECK installation to build a manifest of all expected BIOS files.
-3. Supply your BIOS files by downloading from a URL (Step 5), scanning a local folder (Step 6), or both.
-4. The script packages matched files into `rd_bios_set.zip`, verifies them by MD5 hash, and sorts them into the correct RetroDECK folder structure.
-5. Optionally copy the result directly into your live RetroDECK directory.
+1. Extract the archive.
+2. Run the script.
+3. The script reads your RetroDECK installation to build a manifest of all expected BIOS files.
+4. Supply your BIOS files by downloading from a URL (Step 5), scanning a local folder (Step 6), or both.
+5. The script packages matched files into `rd_bios_set.zip`, verifies them by MD5 hash, and sorts them into the correct RetroDECK folder structure.
+6. Optionally copy the result directly into your live RetroDECK directory.
 
 On subsequent runs you can use your existing `rd_bios_set.zip` and add to it incrementally as you find more files.
 
