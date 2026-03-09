@@ -199,22 +199,30 @@ This ensures a good file already in your archive can never be accidentally overw
 
 Before scanning, all previously recorded `actual_md5` values are cleared. This ensures results from a prior run never persist for files that have since been removed from the archive.
 
-### Step 9 — Skip Categories
+### Step 9 — Copy and Skip Categories
 
-Files not copied into `retrodeck/` are reported in three distinct categories:
+Files copied into `retrodeck/` are reported in two categories:
+
+| Category | Meaning |
+|---|---|
+| Copied (verified) | File found in archive and MD5 matched the expected hash from the RetroDECK manifests |
+| Copied (unverified) | File found in archive and filename matched the manifest, but RetroDECK has no expected MD5 to verify against. Most likely valid — copied by default so nothing is withheld unnecessarily. If RetroDECK later publishes an expected MD5 for this file, re-running the tool will verify it automatically |
+
+Files not copied into `retrodeck/` are reported in two skip categories:
 
 | Category | Meaning |
 |---|---|
 | Hash mismatch | File found in archive but MD5 does not match expected (wrong version or corrupt) |
-| No expected MD5 | File found but the manifests contain no hash to verify against |
-| Not in manifest | File present in archive but not recognised |
+| Not in manifest | File present in archive but not recognised by any RetroDECK manifest |
 
 ### Step 13 — Cleanup
 
 All Y/N choices are collected first. No files are deleted until every question has been answered. Items are executed in this order:
 
 1. `retrodeck/` staging folder *(safety check: refuses to delete if the path resolves to your live RetroDECK directory)*
-2. `rd_bios_set.zip` *(if keeping, and hash failures were detected, you will be offered a scrub option to remove only the failed files from the archive)*
+2. `rd_bios_set.zip` *(if keeping, two optional scrub prompts are offered)*
+   - **Failed hash files** — appears if any files failed hash checks. Removes files whose MD5 did not match the expected value
+   - **Unverified files** — appears if any files were copied without hash verification. Advanced option for users who want the zip to contain only fully verified files. Most users should skip this
 3. Downloaded files
 4. `combined_manifest.json` *(always last — the scrub above depends on it)*
 
@@ -238,7 +246,7 @@ All Y/N choices are collected first. No files are deleted until every question h
 
 - Files are matched by **filename** in Step 7 and verified by **MD5 hash** in Step 9. Both checks must pass for a file to be placed into the `retrodeck/` folder structure.
 
-- A file with no expected MD5 in the RetroDECK manifests will appear as `Missing from RetroDECK manifests` in the CSV report and will be listed under a separate skip category in Step 9. It cannot be verified or copied regardless of whether it is present in the archive.
+- A file with no expected MD5 in the RetroDECK manifests will appear as `Missing from RetroDECK manifests` in the CSV report and will be listed under the "Copied (unverified)" category in Step 9. It is copied to staging by default since the filename matched a manifest entry RetroDECK declared it wants. If RetroDECK later adds an expected MD5 for the file, re-running the tool will verify it automatically on the next run.
 
 - Each time Step 8 runs it clears all previously recorded MD5 results before scanning. This ensures that if a file is removed from `rd_bios_set.zip` between runs, it will not continue to show as present in the report or affect Step 9.
 
@@ -248,6 +256,4 @@ All Y/N choices are collected first. No files are deleted until every question h
 
 - A file with a matching filename but wrong MD5 will be reported in Step 10. It will **not** be copied into `retrodeck/`. Saving it to `failed_hash_checks/` lets you identify which files need to be sourced from elsewhere.
 
-- The `retrodeck/` staging folder is safe to delete after Step 11 — it is only a copy of what was placed into your live RetroDECK directory.
-
-- If `rd_bios_tool.conf` is missing, the script will run using built-in fallback defaults and display a warning. It is recommended to keep the config file alongside the script at all times.
+- The `retrodeck/` staging folder is safe to delete after Step 11 — it
