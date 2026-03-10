@@ -4,8 +4,6 @@ A personal utility for finding, verifying, and installing BIOS files for [RetroD
 
 > **Disclaimer:** This tool was created for the developer's personal use. It is not affiliated with RetroDECK in any way. Do not contact RetroDECK for support regarding this tool. The creator takes no responsibility for any damage caused by its use.
 
-> **Version note:** Built and tested against **RetroDECK 0.10.6b** on **Bazzite Linux**. There is no guarantee it will work with other versions.
-
 ---
 
 ## Contents
@@ -14,7 +12,7 @@ A personal utility for finding, verifying, and installing BIOS files for [RetroD
 - [Requirements](#requirements)
 - [Configuration](#configuration)
 - [Getting Started](#getting-started)
-- [How to Run](#how-to-run)
+- [How to Run — Linux](#how-to-run--linux)
 - [Script Steps](#script-steps)
 - [CSV Report Columns](#csv-report-columns)
 - [Notes](#notes)
@@ -62,17 +60,23 @@ rd_bios_tool/
 
 ## Requirements
 
+### All Platforms
+
 | Requirement | Notes |
 |---|---|
-| Linux | Tested on Bazzite |
-| bash | Standard |
-| python3 | Standard |
 | RetroDECK | Must be installed on the system |
+| python3 | Standard |
 | unzip | Recommended for archive scanning |
 | 7z | Optional — adds `.7z` and additional format support |
 | unar | Optional — adds `.rar` and additional format support |
 | rsync | Required for Step 11 (live directory population) only |
 | wget or curl | Required for Step 5 (URL download) only |
+
+### Linux
+
+| Requirement | Notes |
+|---|---|
+| bash | Standard |
 
 ---
 
@@ -132,9 +136,11 @@ The basic workflow:
 
 On subsequent runs you can use your existing `rd_bios_set.zip` and add to it incrementally as you find more files.
 
+The script will guide you through each step with prompts. Press `Y` at each confirmation to accept the default path, or `N` to enter a custom one.
+
 ---
 
-## How to Run
+## How to Run — Linux
 
 **First time only** — make the script executable:
 
@@ -153,8 +159,6 @@ chmod +x ~/Desktop/rd_bios_tool/rd_bios_script.sh
 ```bash
 chmod +x ~/Desktop/rd_bios_tool/rd_bios_script.sh && ~/Desktop/rd_bios_tool/rd_bios_script.sh
 ```
-
-The script will guide you through each step with prompts. Press `Y` at each confirmation to accept the default path, or `N` to enter a custom one.
 
 ---
 
@@ -238,7 +242,16 @@ All Y/N choices are collected first. No files are deleted until every question h
 | `Required` | Whether the file is required, optional, or not specified |
 | `Expected MD5` | The MD5 hash(es) from the manifests, or `Missing from RetroDECK manifests` if none listed |
 | `Actual MD5` | The MD5 computed from the file in `rd_bios_set.zip`. Blank if not found |
-| `Present` | `Yes` / `No` / `Not copied due to checksum mismatch` |
+| `Present` | `Yes` / `Yes (unverified — no expected MD5 in RetroDECK manifests)` / `No` / `Not copied due to checksum mismatch` |
+
+**Present column values explained:**
+
+| Value | Meaning |
+|---|---|
+| `Yes` | RetroDECK wants it, you have it, hash check passed |
+| `Yes (unverified — no expected MD5 in RetroDECK manifests)` | RetroDECK wants it, you have it, no hash available to check against |
+| `Not copied due to checksum mismatch` | RetroDECK wants it, you have it, hash check failed |
+| `No` | RetroDECK wants it, you don't have it |
 
 ---
 
