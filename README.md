@@ -269,4 +269,4 @@ All Y/N choices are collected first. No files are deleted until every question h
 
 - A file with a matching filename but wrong MD5 will be reported in Step 10. It will **not** be copied into `retrodeck/`. Saving it to `failed_hash_checks/` lets you identify which files need to be sourced from elsewhere.
 
-- The `retrodeck/` staging folder is safe to delete after Step 11 — it
+- The `retrodeck/` staging folder is safe to delete after Step 11.
